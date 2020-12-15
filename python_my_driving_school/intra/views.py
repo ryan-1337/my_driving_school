@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 from .forms import CreateUserForm
 
 # Create your views here.
+@login_required(login_url='login')
 def index(request):
     return render(request, 'home/index.html')
 
+@staff_member_required(login_url='login')
 def registerPage(request):
     form = CreateUserForm()
 
@@ -42,3 +47,5 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+

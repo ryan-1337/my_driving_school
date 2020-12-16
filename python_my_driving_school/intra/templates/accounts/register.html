@@ -1,64 +1,43 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
+{% extends 'accounts/main.html' %}
+{% block content %}
+<div class="bg-grey-lighter min-h-screen flex flex-col">
+    <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+        <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+            <h1 class="mb-8 text-3xl text-center">Création de compte</h1>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="username"
+                    placeholder="Username" required />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Je crée mon compte</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
+                <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="first_name"
+                    placeholder="Prenom" required />
 
-    <link
-  rel="stylesheet"
-  href="{% static 'css/styles.css' %}"
-  type="text/css"
-/>
-</head>
+                <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="last_name"
+                    placeholder="Nom" required />
 
-<body class="bg-grey-lightest font-serif leading-normal tracking-normal">
-    <!-- component -->
-    <div class="bg-grey-lighter min-h-screen flex flex-col">
-        <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-            <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-                <h1 class="mb-8 text-3xl text-center">Création de compte</h1>
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="username"
-                        placeholder="Username" required/>
+                <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="email"
+                    placeholder="Email" required />
 
-                    <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="first_name"
-                        placeholder="Prenom" required/>
+                <input type="password" class="block border border-grey-light w-full p-3 rounded mb-4" name="password1"
+                    placeholder="Password" required />
+                <input type="password" class="block border border-grey-light w-full p-3 rounded mb-4" name="password2"
+                    placeholder="Confirm Password" required />
 
-                    <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="last_name"
-                        placeholder="Nom" required/>
-
-                    <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" name="email"
-                        placeholder="Email" required/>
-
-                    <input type="password" class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="password1" placeholder="Password" required/>
-                    <input type="password" class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="password2" placeholder="Confirm Password" required/>
-
-                    <button type="submit"
-                        class="w-full text-center py-3 rounded bg-blue-300 text-white hover:bg-green-dark focus:outline-none my-1">Je crée mon compte</button>
-                </form>
-                <div class="text-center text-sm text-grey-dark mt-4">
+                <button type="submit"
+                    class="w-full text-center py-3 rounded bg-blue-300 text-white hover:bg-green-dark focus:outline-none my-1">Je
+                    crée mon compte</button>
+            </form>
+            <div class="text-center text-sm text-grey-dark mt-4">
                 {{form.errors}}
-                </div>
-            </div>
-
-            <div class="text-grey-dark mt-6">
-                J'ai déja un compte ?
-                <a class="no-underline border-b border-blue text-blue" href="../login/">
-                    Je me connecte
-                </a>.
             </div>
         </div>
-    </div>
-</body>
 
-</html>
+        <div class="text-grey-dark mt-6">
+            J'ai déja un compte ?
+            <a class="no-underline border-b border-blue text-blue" href="../login/">
+                Je me connecte
+            </a>.
+        </div>
+    </div>
+</div>
+{% endblock %}

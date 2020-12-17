@@ -1,3 +1,4 @@
+{% load intra_tags %}
 <nav id="header" class="w-full z-30 top-10 py-1 bg-blue-900 shadow-lg border-b border-gray-200 mt-0">
     <div class="w-full flex items-center justify-between mt-0 px-6 py-2">
        <label for="menu-toggle" class="cursor-pointer md:hidden block">
@@ -11,17 +12,20 @@
        <div class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
           <nav>
              <ul class="md:flex items-center justify-between text-base text-gray-300 pt-4 md:pt-0">
-                <li><a class="inline-block no-underline hover:text-white font-medium text-lg py-2 px-4 lg:-ml-2" href="#">Home</a></li>
-                <li><a class="inline-block no-underline hover:text-white font-medium text-lg py-2 px-4 lg:-ml-2" href="#">Products</a></li>
-                <li><a class="inline-block no-underline hover:text-white font-medium text-lg py-2 px-4 lg:-ml-2" href="#">About</a></li>
+                <li><a class="inline-block no-underline hover:text-white font-medium text-lg py-2 px-4 lg:-ml-2" href="/intra/dashboard/">Dashboard</a></li>
+                {% if user|has_group:'admin' %}
+                <li><a class="inline-block no-underline hover:text-white font-medium text-lg py-2 px-4 lg:-ml-2" href="/intra/register/">Register</a></li>
+                {% endif %}
              </ul>
           </nav>
        </div>
        
        <div class="order-2 md:order-3 flex flex-wrap items-center justify-end mr-0 md:mr-4" id="nav-content">
           <div class="auth flex items-center w-full md:w-full">
+             {% if not user.is_authenticated %}
              <button class="bg-transparent text-gray-500  p-2 rounded border border-gray-300 mr-4 hover:bg-gray-100 hover:text-gray-700">Sign in</button>
              <button class="bg-gray-50 text-gray-800  p-2 rounded  hover:bg-blue-500 hover:text-gray-100">Sign up</button>
+             {% endif %}
              {% if user.is_authenticated %}
              <span class="text-gray-200 ml-3 mr-2"> Hello, {{ request.user }} </span>
              <span class="text-red-700 font-semibold"><a href="{% url 'logout' %}"> Logout</a></span>

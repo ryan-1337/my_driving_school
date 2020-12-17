@@ -36,4 +36,4 @@ class Rdv(models.Model):
     places = models.CharField(max_length=200)
     instructor = models.CharField(max_length=200)
 
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)

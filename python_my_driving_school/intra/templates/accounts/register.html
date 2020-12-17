@@ -29,6 +29,9 @@
             </form>
             <div class="text-center text-sm text-grey-dark mt-4">
                 {{form.errors}}
+            {% for message in messages %}
+            <p id="messages">{{message}}</p>
+            {% endfor %}
             </div>
         </div>
 

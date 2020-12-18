@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.generic import UpdateView
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, ChangeUserForm
 from .decorators import unauthenticated_user, allowed_users
 
 
@@ -14,6 +15,7 @@ from .decorators import unauthenticated_user, allowed_users
 @login_required(login_url='login')
 def index(request):
     return render(request, 'accounts/dashboard.html')
+
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'secretary'])
@@ -34,6 +36,7 @@ def registerPage(request):
     context = {'form': form}
     return render(request, 'accounts/register.html', context)
 
+
 @unauthenticated_user
 def loginPage(request):
 
@@ -47,9 +50,11 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect') 
+            messages.info(
+                request, 'Nom d\'utilisateur ou mot de passe incorrect')
     context = {}
-    return render(request, 'accounts/login.html',context)
+    return render(request, 'accounts/login.html', context)
+
 
 def logoutUser(request):
     logout(request)
@@ -60,6 +65,17 @@ def logoutUser(request):
 def dashboardPage(request):
     return render(request, 'accounts/dashboard.html')
 
+
 @login_required(login_url='login')
 def editProfil(request):
-    return render(request, 'accounts/edit_profil.html')
+    form = ChangeUserForm()
+
+    if request.method == 'POST':
+        form = ChangeUserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Compte mit à jour')
+
+    context = {'form': form}
+    return render(request, 'accounts/edit_profil.html', context)

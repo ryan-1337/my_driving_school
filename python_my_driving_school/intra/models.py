@@ -14,7 +14,6 @@ class Role(models.Model):
     def __str__(self):
         return self.user
 
-# Create your models here.
 class Forfait(models.Model):
     FORFAIT = (
         ('Conduite Basic', 'Conduite Basic'),

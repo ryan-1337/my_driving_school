@@ -9,12 +9,22 @@ from django.views.generic import UpdateView
 
 from .forms import CreateUserForm, ChangeUserForm
 from .decorators import unauthenticated_user, allowed_users
+from .models import User, Forfait
 
 
 # Create your views here.
 @login_required(login_url='login')
 def index(request):
-    return render(request, 'accounts/dashboard.html')
+    forfait = Forfait.objects.filter(user_id=request.user.pk)[0]
+    hoursPaid = forfait.hours_paid
+    subscribeDate = forfait.date_created
+
+
+
+    context = {'forfait': forfait, 'hoursPaid': hoursPaid, 
+    'subscribeDate': subscribeDate} 
+    return render(request, 'accounts/dashboard.html', context)
+
 
 
 @login_required(login_url='login')
@@ -59,11 +69,6 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
-
-
-@login_required(login_url='login')
-def dashboardPage(request):
-    return render(request, 'accounts/dashboard.html')
 
 
 @login_required(login_url='login')

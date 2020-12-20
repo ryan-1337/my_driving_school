@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import (
 )
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django import forms
+from .models import Rdv
 
 
 class CreateUserForm(UserCreationForm):
@@ -30,3 +31,10 @@ class ChangeUserForm(UserChangeForm):
             user.save()
         return user
 
+class RdvForm(ModelForm):
+    class Meta:
+        model = Rdv
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateTimeInput(attrs={'type': 'datetime-local'})
+        }

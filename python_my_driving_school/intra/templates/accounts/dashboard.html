@@ -55,7 +55,9 @@
 			class="mt-8 flex items-center justify-between py-3 px-2 text-white
 			dark:text-gray-200 bg-blue-400 dark:bg-blue-500 rounded-lg shadow">
 			<!-- Action -->
-			<span>Prendre RDV</span>
+			<a href="/intra/setrdv">
+				<span>Prendre RDV</span>
+			</a>
 			<svg class="h-5 w-5 fill-current" viewBox="0 0 24 24">
 				<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
 			</svg>
@@ -232,12 +234,40 @@
 					</span>
 					<span>
 						<span class="text-blue-500 dark:text-blue-200">
+							Heures restante
+						</span>
+						  {{hoursTake}};
+					</span>
+					<span>
+						<span class="text-blue-500 dark:text-blue-200">
 							date de souscription
 						</span>
 						  {{subscribeDate}}
 					</span>
 				</div>
 			</div>
+
+    
+			
+				<div class="bg-black bg-opacity-50 absolute inset-0 hidden justify-center items-center" id="overlay">
+					<div class="bg-gray-200 max-w-sm py-2 px-3 rounded shadow-xl text-gray-800">
+						<div class="flex justify-between items-center">
+							<h4 class="text-lg font-bold">User infos</h4>
+							<svg class="h-6 w-6 cursor-pointer p-1 hover:bg-gray-300 rounded-full" id="close-modal" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd"
+									d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+									clip-rule="evenodd"></path>
+							</svg>
+						</div>
+						<div class="mt-2 text-sm">
+							<p>lorem</p>	
+						</div>
+					</div>
+				</div>
+				
+
+
+
 			{% for rdv in allRdv %}
 			<div
 				class="mt-10 flex px-4 py-4 justify-between bg-white
@@ -273,7 +303,7 @@
 							</span>
 						{% else %}
 							<span>Elève</span>
-							<span class="mt-2 text-black dark:text-gray-200">
+							<span class="mt-2 text-black dark:text-gray-200" id="user">
 								{{rdv.user}}
 							</span>
 						{% endif %}	
@@ -298,14 +328,16 @@
 						<span>status</span>
 						{% now "j F Y H:i" as current_date %}
 						{% if current_date > rdv.date|date:"j F Y H:i" %}
-							<span class="text-red-600 dark:text-red-400">
+							<span class="text-red-600 dark:text-red-400 mb-2">
 								Passé
 							</span>
 						{% else %}	
-							<span class="text-blue-600 dark:text-blue-400">
+							<span class="text-blue-600 dark:text-blue-400 mb-2">
 								Reservé
 							</span>
 						{% endif %}	
+						<a class=" border rounded-full bg-green-600 hover:bg-green-700 text-white text-sm px-2" href="{% url 'updaterdv' rdv.id %}">Update</a>
+						<a class=" border rounded-full bg-red-600 hover:bg-red-700 text-white text-sm px-2" href="{% url 'delete' rdv.id %}">Delete</a>
 					</div>
 				</div>
             </div>
@@ -317,4 +349,21 @@
 	</main>
 
 </div>
+				<script>
+					window.addEventListener('DOMContentLoaded', () =>{
+						const overlay = document.querySelector('#overlay')
+						const delBtn = document.querySelectorAll('#user')
+						const closeBtn = document.querySelector('#close-modal')
+			
+						const toggleModal = () => {
+							overlay.classList.toggle('hidden')
+							overlay.classList.toggle('flex')
+						}
+			
+						delBtn.addEventListener('click', toggleModal)
+			
+						closeBtn.addEventListener('click', toggleModal)
+					})
+			
+				</script>
 {% endblock %}

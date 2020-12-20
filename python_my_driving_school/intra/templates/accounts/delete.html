@@ -1,0 +1,15 @@
+{% extends 'accounts/main.html' %}
+{% load static %}
+{% block content %}
+
+<p>Êtes vous sur de vouloir supprimer "{{item}}"</p>
+
+<form method="POST" action="{% url 'delete' item.id %}">
+    {% csrf_token %}
+
+    <a href="{% url 'home' %}">Annuler</a>
+
+    <input class="h-10 px-5 m-2 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800" type="submit" name="Confirmer">
+
+</form>
+{% endblock %}

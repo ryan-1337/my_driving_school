@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import UpdateView
 
-from .forms import CreateUserForm, ChangeUserForm
+from .forms import CreateUserForm, ChangeUserForm, RdvForm
 from .decorators import unauthenticated_user, allowed_users
 from .models import User, Forfait, Rdv
 
@@ -21,9 +21,13 @@ def index(request):
         subscribeDate = forfait.date_created
 
         allRdv = Rdv.objects.filter(user_id=request.user.pk).all()
+        hoursTake = hoursPaid
+        for e in allRdv:
+            hoursTake -=  e.hours
+            print(hoursTake)
 
         context = {'forfait': forfait, 'hoursPaid': hoursPaid, 
-        'subscribeDate': subscribeDate, 'allRdv': allRdv} 
+        'subscribeDate': subscribeDate, 'allRdv': allRdv, 'hoursTake': hoursTake} 
         return render(request, 'accounts/dashboard.html', context)
     elif request.user.groups.all()[0] == Group.objects.get(name='instructor'):
 
@@ -93,3 +97,40 @@ def editProfil(request):
 
     context = {'form': form}
     return render(request, 'accounts/edit_profil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'secretary', 'instructor'])
+def setRdv(request):
+    form = RdvForm()
+    if request.method == 'POST':
+        # print('Printing POST:', request.POST)
+        form = RdvForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+    context = {'form': form}
+    return render(request, 'accounts/setrdv.html', context)
+
+def updateRdv(request, pk):
+    rdv = Rdv.objects.get(id=pk)
+    form = RdvForm(instance=rdv)
+    if request.method == 'POST':
+        # print('Printing POST:', request.POST)
+        form = RdvForm(request.POST, instance=rdv)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    context = {'form': form}
+    return render(request, 'accounts/setrdv.html', context)
+
+def deleteRdv(request, pk):
+    rdv = Rdv.objects.get(id=pk)
+    
+    if request.method == "POST":
+        rdv.delete()
+        return redirect('home')
+
+    context = {'item': rdv}
+
+    return render(request, 'accounts/delete.html', context)

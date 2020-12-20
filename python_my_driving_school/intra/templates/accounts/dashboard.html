@@ -1,4 +1,5 @@
 {% extends 'accounts/main.html' %}
+{% load intra_tags %}
 {% block content %}
 <!-- component -->
 <div class="h-screen w-full flex overflow-hidden">
@@ -237,30 +238,54 @@
 					</span>
 				</div>
 			</div>
+			{% for rdv in allRdv %}
 			<div
 				class="mt-10 flex px-4 py-4 justify-between bg-white
 				dark:bg-gray-600 shadow-xl rounded-lg cursor-pointer ">
 				<!-- Card -->
-
 				<div class="flex justify-between">
 					<!-- Left side -->
 					<div
-						class="ml-4 flex flex-col capitalize text-gray-600
+						class="ml-4 flex flex-col text-gray-600
 						dark:text-gray-400">
 						<span>Jour</span>
 						<span class="mt-2 text-black dark:text-gray-200">
-							Lundi 28 septembre 2020
+							{{rdv.date}}
+						</span>
+					</div>
+
+					<div
+						class="ml-4 flex flex-col capitalize text-gray-600
+						dark:text-gray-400">
+						<span>Nombre d'heure</span>
+						<span class="mt-2 text-black dark:text-gray-200">
+							{{rdv.hours}}
 						</span>
 					</div>
 
 					<div
 						class="ml-12 flex flex-col capitalize text-gray-600
 						dark:text-gray-400">
-						<span>Instructeur</span>
-						<span class="mt-2 text-black dark:text-gray-200">
-							Xavier
-						</span>
+						{% if user|has_group:"student" %}
+							<span>Instructeur</span>
+							<span class="mt-2 text-black dark:text-gray-200">
+								{{rdv.instructor}}
+							</span>
+						{% else %}
+							<span>Elève</span>
+							<span class="mt-2 text-black dark:text-gray-200">
+								{{rdv.user}}
+							</span>
+						{% endif %}	
+					</div>
 
+					<div
+						class="ml-12 flex flex-col capitalize text-gray-600
+						dark:text-gray-400">
+						<span>Ville</span>
+						<span class="mt-2 text-black dark:text-gray-200">
+							{{rdv.places}}
+						</span>
 					</div>
 
 				</div>
@@ -271,99 +296,21 @@
 						class="mr-16 flex flex-col capitalize text-gray-600
 						dark:text-gray-400">
 						<span>status</span>
-						<span class="text-red-600 dark:text-red-400">
-							Annulé
-						</span>
+						{% now "j F Y H:i" as current_date %}
+						{% if current_date > rdv.date|date:"j F Y H:i" %}
+							<span class="text-red-600 dark:text-red-400">
+								Passé
+							</span>
+						{% else %}	
+							<span class="text-blue-600 dark:text-blue-400">
+								Reservé
+							</span>
+						{% endif %}	
 					</div>
 				</div>
             </div>
 
-			<div
-				class="mt-8 flex px-4 py-4 justify-between bg-white
-				dark:bg-gray-600 shadow-xl rounded-lg cursor-pointer">
-				<!-- Card -->
-
-				<div class="flex justify-between">
-					<!-- Left side -->
-					<div
-						class="ml-4 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>Jour</span>
-						<span class="mt-2 text-black dark:text-gray-200">
-							Mardi 18 septembre 2020
-						</span>
-					</div>
-
-					<div
-						class="ml-12 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>Instructeur</span>
-						<span class="mt-2 text-black dark:text-gray-200">
-							Xavier
-						</span>
-
-					</div>
-
-				</div>
-
-				<div class="flex">
-					<!-- Rigt side -->
-
-					<div
-						class="mr-16 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>status</span>
-						<span class="mt-2 text-green-600 dark:text-yellow-400">
-							Passé
-						</span>
-					</div>
-				</div>
-
-			</div>
-
-			<div
-				class="mt-8 flex px-4 py-4 justify-between bg-white
-				dark:bg-gray-600 shadow-xl rounded-lg cursor-pointer">
-				<!-- Card -->
-
-				<div class="flex justify-between">
-					<!-- Left side -->
-					<div
-						class="ml-4 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>Jour</span>
-						<span class="mt-2 text-black dark:text-gray-200">
-							Mardi 7 septembre 2020
-						</span>
-					</div>
-
-					<div
-						class="ml-12 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>Instructeur</span>
-						<span class="mt-2 text-black dark:text-gray-200">
-							Xavier
-						</span>
-
-					</div>
-
-				</div>
-
-				<div class="flex">
-					<!-- Rigt side -->
-
-					<div
-						class="mr-16 flex flex-col capitalize text-gray-600
-						dark:text-gray-400">
-						<span>status</span>
-						<span class="mt-2 text-green-600 dark:text-yellow-400">
-							Passé
-						</span>
-					</div>
-				</div>
-
-			</div>
-
+			{% endfor %}
 
 		</div>
 

@@ -9,21 +9,30 @@ from django.views.generic import UpdateView
 
 from .forms import CreateUserForm, ChangeUserForm
 from .decorators import unauthenticated_user, allowed_users
-from .models import User, Forfait
+from .models import User, Forfait, Rdv
 
 
 # Create your views here.
 @login_required(login_url='login')
 def index(request):
-    forfait = Forfait.objects.filter(user_id=request.user.pk)[0]
-    hoursPaid = forfait.hours_paid
-    subscribeDate = forfait.date_created
+    if request.user.groups.all()[0] == Group.objects.get(name='student'):
+        forfait = Forfait.objects.filter(user_id=request.user.pk)[0]
+        hoursPaid = forfait.hours_paid
+        subscribeDate = forfait.date_created
 
+        allRdv = Rdv.objects.filter(user_id=request.user.pk).all()
 
+        context = {'forfait': forfait, 'hoursPaid': hoursPaid, 
+        'subscribeDate': subscribeDate, 'allRdv': allRdv} 
+        return render(request, 'accounts/dashboard.html', context)
+    elif request.user.groups.all()[0] == Group.objects.get(name='instructor'):
 
-    context = {'forfait': forfait, 'hoursPaid': hoursPaid, 
-    'subscribeDate': subscribeDate} 
-    return render(request, 'accounts/dashboard.html', context)
+        allRdv = Rdv.objects.filter(instructor=request.user.username).all()
+
+        context = {'allRdv': allRdv} 
+        return render(request, 'accounts/dashboard.html', context)
+    else: 
+        return render(request, 'accounts/dashboard.html')
 
 
 
